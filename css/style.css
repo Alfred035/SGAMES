@@ -130,15 +130,21 @@ body {
 
 .produtos {
     display: flex;
-    justify-content: space-around;
-    padding: 20px;
-    flex-wrap: wrap;
     gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
 }
 
 .produto {
+    flex: 0 0 auto; /* impede de quebrar */
+    width: 180px;  /* tamanho fixo para celular */
+    scroll-snap-align: start;
     text-align: center;
-    width: 150px;
+}
+
+.produtos::-webkit-scrollbar {
+    display: none; /* some a barra no celular */
 }
 
 .produto img {
@@ -173,22 +179,23 @@ body {
 
 .lista-promocoes {
     display: flex;
-    justify-content: space-around;
-    padding: 20px;
-    flex-wrap: wrap;
     gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
 }
 
 .promo {
+    flex: 0 0 auto;
+    width: 180px; /* tamanho fixo responsivo */
+    scroll-snap-align: start;
     text-align: center;
-    width: 180px;
 }
 
-.promo img {
-    width: 170px;
-    height: 170px;
-    object-fit: contain;
+.lista-promocoes::-webkit-scrollbar {
+    display: none;
 }
+
 
 /* ===== RODAPÉ LOGOS ===== */
 
@@ -356,4 +363,3 @@ textarea {
     height: auto;
   }
 }
-
