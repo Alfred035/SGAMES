@@ -179,23 +179,22 @@ body {
 
 .lista-promocoes {
     display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    flex-wrap: wrap;
     gap: 20px;
-    overflow-x: auto;
-    padding: 10px;
-    scroll-snap-type: x mandatory;
 }
 
 .promo {
-    flex: 0 0 auto;
-    width: 180px; /* tamanho fixo responsivo */
-    scroll-snap-align: start;
     text-align: center;
+    width: 180px;
 }
 
-.lista-promocoes::-webkit-scrollbar {
-    display: none;
+.promo img {
+    width: 170px;
+    height: 170px;
+    object-fit: contain;
 }
-
 
 /* ===== RODAPÉ LOGOS ===== */
 
