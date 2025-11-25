@@ -17,6 +17,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap; /* importante para mobile */
+    gap: 15px;
 }
 
 .logo {
@@ -30,6 +32,8 @@ body {
     display: flex;
     align-items: center;
     width: 50%;
+    min-width: 200px;
+    flex: 1;
 }
 
 .barra-pesquisa input {
@@ -50,37 +54,46 @@ body {
     margin-left: 15px;
     border-radius: 5px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ===== MENU ===== */
-
 .menu {
     background: #0d4be1;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 15px 0;
+    gap: 15px;
+    padding: 12px 0;
+    overflow-x: auto;      /* Permite deslizar no celular sem quebrar */
+    white-space: nowrap;   /* Mantém tudo na mesma linha */
+}
+
+.menu::-webkit-scrollbar {
+    display: none;         /* Some com a barra no celular */
 }
 
 .menu a {
     background: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 10px;
     font-weight: bold;
-    cursor: pointer;
     text-decoration: none;
     color: black;
+    font-size: 15px;
+
+    display: inline-block;  /* Mantém tamanho enxuto */
+    white-space: nowrap;    /* Impede quebrar texto */
 }
 
-.menu a:hover{
-  background-color: #3cb4f9;
+.menu a:hover {
+    background-color: #3cb4f9;
 }
 
 
 /* ===== BANNER ===== */
 
-/* Carrossel de Banner */
 .carrossel-banner {
   width: 100%;
   margin: 0 auto;
@@ -112,13 +125,15 @@ body {
     padding: 10px 20px;
     width: fit-content;
     margin: 20px auto;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 
 .produtos {
     display: flex;
     justify-content: space-around;
     padding: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .produto {
@@ -140,6 +155,8 @@ body {
     padding: 20px;
     display: flex;
     justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .beneficio {
@@ -158,6 +175,8 @@ body {
     display: flex;
     justify-content: space-around;
     padding: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .promo {
@@ -177,12 +196,12 @@ body {
     background: #e5e5e5;
     padding: 10px 0;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: center;
 }
 
 .rodape-logos img {
-    width: 900px;
+    width: 100%;
+    max-width: 500px; /* antes era 900px fixo */
     opacity: 0.8;
 }
 
@@ -196,7 +215,8 @@ body {
     font-weight: bold;
 }
 
-/* CONTATO */
+/* ===== CONTATO ===== */
+
 .contato {
   padding: 40px 20px;
   background-color: #f9f9f9;
@@ -254,7 +274,6 @@ body {
 .botoes-form {
   display: flex;
   gap: 10px;
-  justify-content: flex-start;
 }
 
 .botoes-form button {
@@ -273,4 +292,67 @@ body {
 
 textarea {
     resize: none;
+}
+
+
+/* ============================
+   RESPONSIVIDADE (MOBILE)
+   ============================ */
+
+@media (max-width: 768px) {
+
+  .topo {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .barra-pesquisa {
+    width: 100%;
+  }
+
+  .icones-direita {
+    justify-content: center;
+  }
+
+  .produtos {
+    justify-content: center;
+  }
+
+  .lista-promocoes {
+    justify-content: center;
+  }
+
+  .produto,
+  .promo {
+    width: 45%;
+    max-width: 160px;
+  }
+
+  .beneficios {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .beneficio {
+    justify-content: center;
+  }
+
+  .rodape-logos img {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .produto,
+  .promo {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .produto img,
+  .promo img {
+    width: 100%;
+    height: auto;
+  }
 }
