@@ -1,0 +1,276 @@
+@font-face {
+  font-family: KoHo ;
+  src: url('../fonts/koho-v18-latin-regular.woff2');
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: KoHo;
+}
+
+/* ===== TOPO ===== */
+
+.topo {
+    background: #0d4be1;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 120px;
+}
+
+.barra-pesquisa {
+    background: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    width: 50%;
+}
+
+.barra-pesquisa input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.icones-direita {
+    display: flex;
+}
+
+.icones-direita .quadrado {
+    width: 30px;
+    height: 30px;
+    background: white;
+    margin-left: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* ===== MENU ===== */
+
+.menu {
+    background: #0d4be1;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px 0;
+}
+
+.menu a {
+    background: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.menu a:hover{
+  background-color: #3cb4f9;
+}
+
+
+/* ===== BANNER ===== */
+
+/* Carrossel de Banner */
+.carrossel-banner {
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  min-width: 100%;
+  transition: opacity 1s ease;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+}
+
+/* ===== DESTAQUES ===== */
+
+.titulo {
+    text-align: center;
+    background: #1e63e2;
+    color: white;
+    padding: 10px 20px;
+    width: fit-content;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+.produtos {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.produto {
+    text-align: center;
+    width: 150px;
+}
+
+.produto img {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ===== BENEFÍCIOS ===== */
+
+.beneficios {
+    background: #f3f3f3;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.beneficio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.beneficio .emoji {
+    font-size: 40px;
+}
+
+/* ===== PROMOÇÕES ===== */
+
+.lista-promocoes {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.promo {
+    text-align: center;
+    width: 180px;
+}
+
+.promo img {
+    width: 170px;
+    height: 170px;
+    object-fit: contain;
+}
+
+/* ===== RODAPÉ LOGOS ===== */
+
+.rodape-logos {
+    background: #e5e5e5;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.rodape-logos img {
+    width: 900px;
+    opacity: 0.8;
+}
+
+/* ===== FOOTER ===== */
+
+.rodape {
+    background: #0d4be1;
+    text-align: center;
+    padding: 2px;
+    color: white;
+    font-weight: bold;
+}
+
+/* CONTATO */
+.contato {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+}
+
+.contato .titulo {
+  font-size: 28px;
+  color: white;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.contato-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+}
+
+.contato-info {
+  max-width: 400px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.contato-info p {
+  margin-bottom: 10px;
+}
+
+.qr-code {
+  width: 150px;
+  margin-top: 20px;
+}
+
+.formulario {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.formulario label {
+  font-weight: bold;
+  color: #333;
+}
+
+.formulario input,
+.formulario textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+.botoes-form {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.botoes-form button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #0077cc;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.botoes-form button[type="reset"] {
+  background-color: #999;
+}
+
+textarea {
+    resize: none;
+}
