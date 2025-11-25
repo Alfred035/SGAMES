@@ -130,10 +130,11 @@ body {
 
 .produtos {
     display: flex;
+    flex-wrap: wrap;
+    display: flex;
     gap: 20px;
-    overflow-x: auto;
     padding: 10px;
-    scroll-snap-type: x mandatory;
+    justify-content: space-around;
 }
 
 .produto {
