@@ -155,6 +155,28 @@ body {
     border-radius: 10px;
 }
 
+.consoles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px;
+    justify-content: space-around;
+}
+
+.console {
+  flex: 0 0 auto; /* impede de quebrar */
+  width: 180px;  /* tamanho fixo para celular */
+  scroll-snap-align: start;
+  text-align: center;
+}
+
+.console img {
+  width: auto;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
 /* ===== BENEFÍCIOS ===== */
 
 .beneficios {
@@ -325,11 +347,16 @@ textarea {
     justify-content: center;
   }
 
+  .consoles {
+    justify-content: center;
+  }
+
   .lista-promocoes {
     justify-content: center;
   }
 
   .produto,
+  .console,
   .promo {
     width: 45%;
     max-width: 160px;
