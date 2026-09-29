@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGAMES</title>
+    <meta name="description" content="SGAMES, loja gamer fictícia com jogos, consoles, acessórios e promoções.">
+    <title>SGAMES - Jogos</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- TOPO -->
 <header class="topo">
-    <a href="index.html">
-        <img class="logo" src="img/logo.png" alt="SGAMES Logo">
+    <a href="index.html" aria-label="Ir para a página inicial">
+        <img class="logo" src="img/logo.png" alt="Logo SGAMES">
     </a>
 
     <div class="barra-pesquisa">
-        <input type="text" placeholder="Pesquisar">
-        <span class="icone-pesquisa">🔍</span>
+        <label class="sr-only" for="pesquisa">Pesquisar produtos</label>
+        <input type="search" id="pesquisa" placeholder="Pesquisar" autocomplete="off">
+        <span class="icone-pesquisa" aria-hidden="true">🔍</span>
     </div>
 
-    <div class="icones-direita">
-        <div class="quadrado">🛒</div>
-        <div class="quadrado">☰</div>
+    <div class="icones-direita" aria-label="Atalhos">
+        <span class="quadrado" title="Carrinho disponível em versão futura" aria-label="Carrinho">🛒</span>
+        <span class="quadrado" title="Menu de navegação" aria-label="Menu">☰</span>
     </div>
 </header>
 
-<!-- MENU -->
-<nav class="menu">
+<nav class="menu" aria-label="Navegação principal">
+    <a href="index.html">INÍCIO</a>
     <a href="jogos.html">JOGOS</a>
-    <a href="console.html">CONSOLE</a>
-    <a href="acessorios.html">ACESSORIOS</a>
+    <a href="console.html">CONSOLES</a>
+    <a href="acessorios.html">ACESSÓRIOS</a>
     <a href="contato.html">CONTATO</a>
 </nav>
 
@@ -37,10 +38,10 @@
 <section class="destaques">
     <h2 class="titulo">Jogos Casuais</h2>
     <div class="produtos">
-        <div class="produto"><img src="img/chickenrun.png"><h3>Chicken Run: Commandodu</h3><p>R$ 107,99</p></div>
-        <div class="produto"><img src="img/mototrials.png"><h3>MotoTrials</h3><p>R$ 39,99</p></div>
-        <div class="produto"><img src="img/sonicracing.png"><h3>Sonic Racing: CrossWorlds</h3><p>R$ 320,00</p></div>
-        <div class="produto"><img src="img/cardriving.png"><h3>Car Driving School Simulator</h3><p>R$ 57,99</p></div>
+        <article class="produto"><img src="img/chickenrun.png" alt="Capa do Chicken Run: Commandodu"><h3>Chicken Run: Commandodu</h3><p>R$ 107,99</p></article>
+        <article class="produto"><img src="img/mototrials.png" alt="Capa do MotoTrials"><h3>MotoTrials</h3><p>R$ 39,99</p></article>
+        <article class="produto"><img src="img/sonicracing.png" alt="Capa do Sonic Racing: CrossWorlds"><h3>Sonic Racing: CrossWorlds</h3><p>R$ 320,00</p></article>
+        <article class="produto"><img src="img/cardriving.png" alt="Capa do Car Driving School Simulator"><h3>Car Driving School Simulator</h3><p>R$ 57,99</p></article>
     </div>
 </section>
 
@@ -48,10 +49,10 @@
 <section class="destaques">
     <h2 class="titulo">Jogos de Esportes</h2>
     <div class="produtos">
-        <div class="produto"><img src="img/eafc26.png"><h3>EA SPORTS FC™ 26</h3><p>R$ 299,00</p></div>
-        <div class="produto"><img src="img/storror.png"><h3>STORROR Parkour Pro</h3><p>R$ 53,59</p></div>
-        <div class="produto"><img src="img/rematch.png"><h3>REMATCH</h3><p>R$ 89,00</p></div>
-        <div class="produto"><img src="img/formulalegends.png"><h3>Formula Legends</h3><p>R$ 47,69</p></div>
+        <article class="produto"><img src="img/eafc26.png" alt="Capa do EA SPORTS FC 26"><h3>EA SPORTS FC™ 26</h3><p>R$ 299,00</p></article>
+        <article class="produto"><img src="img/storror.png" alt="Capa do STORROR Parkour Pro"><h3>STORROR Parkour Pro</h3><p>R$ 53,59</p></article>
+        <article class="produto"><img src="img/rematch.png" alt="Capa do REMATCH"><h3>REMATCH</h3><p>R$ 89,00</p></article>
+        <article class="produto"><img src="img/formulalegends.png" alt="Capa do Formula Legends"><h3>Formula Legends</h3><p>R$ 47,69</p></article>
     </div>
 </section>
 
@@ -59,9 +60,9 @@
 <section class="destaques">
     <h2 class="titulo">Jogos de Corrida</h2>
     <div class="produtos">
-        <div class="produto"><img src="img/garfieldkart.png"><h3>Garfield Kart 2 - All You Can Drift</h3><p>R$ 107,99</p></div>
-        <div class="produto"><img src="img/cyberclutch.png"><h3>Cyber Clutch Hot Import Nights</h3><p>R$ 99,95</p></div>
-        <div class="produto"><img src="img/wheelworld.png"><h3>Wheel World</h3><p>R$ 50,00</p></div>
+        <article class="produto"><img src="img/garfieldkart.png" alt="Capa do Garfield Kart 2 - All You Can Drift"><h3>Garfield Kart 2 - All You Can Drift</h3><p>R$ 107,99</p></article>
+        <article class="produto"><img src="img/cyberclutch.png" alt="Capa do Cyber Clutch Hot Import Nights"><h3>Cyber Clutch Hot Import Nights</h3><p>R$ 99,95</p></article>
+        <article class="produto"><img src="img/wheelworld.png" alt="Capa do Wheel World"><h3>Wheel World</h3><p>R$ 50,00</p></article>
     </div>
 </section>
 
@@ -85,7 +86,7 @@
 
 <!-- FOOTER -->
 <footer class="rodape">
-    <p class="copy">© 2025 SGAMES — Todos os direitos reservados.</p>
+    <p class="copy">© 2026 SGAMES — Todos os direitos reservados.</p>
 </footer>
 
 </body>
