@@ -435,3 +435,22 @@
   opacity: 0.85;
   transform: translateY(-1px);
 }
+
+/* ===== V1.2 - CATALOG DYNAMIC ===== */
+.catalogo:empty::after,
+.catalogo-promocoes:empty::after {
+  content: 'Nenhum produto encontrado.';
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 24px;
+}
+
+.produto p del,
+.console p del,
+.promo p del {
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-right: 4px;
+}

@@ -6,23 +6,24 @@ O projeto começou como um site estático acadêmico e está sendo evoluído em 
 
 ## 📌 Versão atual
 
-**v1.1 — Refatoração e organização do código**
+**v1.2 — Catálogo dinâmico**
 
 Nesta versão, o foco foi melhorar a estrutura interna do projeto sem alterar sua proposta visual ou adicionar funcionalidades que pertencem às próximas etapas.
 
 ## ✨ O que existe atualmente
 
 - Página inicial com banners e carrossel automático
-- Catálogo de jogos
-- Catálogo de consoles
-- Catálogo de acessórios
+- Catálogo de jogos gerado dinamicamente
+- Catálogo de consoles gerado dinamicamente
+- Catálogo de acessórios gerado dinamicamente
+- Promoções geradas dinamicamente
 - Página de contato
 - Formulário de contato com validação nativa do navegador
 - Navegação entre páginas
 - Layout responsivo
 - Identidade visual gamer
 
-> O carrinho, a pesquisa de produtos e o envio real do formulário ainda são apenas elementos de interface. Essas funcionalidades serão implementadas em versões futuras.
+> O catálogo agora é controlado por dados em JavaScript. Pesquisa, filtros, carrinho e backend continuam reservados para versões futuras.
 
 ## 🧹 Alterações da v1.1
 
@@ -59,6 +60,45 @@ O JavaScript também identifica automaticamente a página atual e aplica `aria-c
 - Script passou a ser carregado com `defer` de forma padronizada.
 - Navegação recebeu estado visual para a página atual.
 - Estrutura e indentação foram padronizadas.
+
+## 🔄 Alterações da v1.2
+
+A principal mudança desta versão foi retirar os produtos diretamente do HTML e centralizar seus dados em `js/products.js`.
+
+### Catálogo centralizado
+
+Cada produto agora é representado por um objeto com informações como:
+
+```javascript
+{
+  id: 'gta-v',
+  name: 'Grand Theft Auto V Enhanced',
+  price: 149.90,
+  image: 'img/gtaV.png',
+  type: 'jogo',
+  category: 'destaques'
+}
+```
+
+O HTML passa a definir apenas **onde** o catálogo será exibido:
+
+```html
+<div class="produtos catalogo" data-catalog="jogo" data-category="destaques"></div>
+```
+
+O JavaScript filtra os dados pela categoria e cria os cards automaticamente. Isso reduz repetição de HTML e deixa a manutenção do catálogo centralizada.
+
+### Separação de responsabilidades
+
+```text
+js/
+├── products.js   # dados dos produtos e promoções
+└── script.js     # renderização, navegação e carrossel
+```
+
+### Formatação de preços
+
+Os valores numéricos são armazenados como números e formatados para Real brasileiro no momento da renderização. Preços promocionais também podem possuir `oldPrice`.
 
 ## 🗂️ Estrutura do projeto
 
