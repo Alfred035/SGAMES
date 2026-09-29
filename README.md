@@ -1,91 +1,159 @@
 # 🎮 SGAMES
 
-**SGAMES** é um site estático de uma loja gamer fictícia, desenvolvido com **HTML5, CSS3 e JavaScript** como projeto acadêmico.
+**SGAMES** é um projeto de site de e-commerce fictício voltado para o universo gamer, desenvolvido inicialmente com **HTML, CSS e JavaScript**.
 
-A **v1.0** representa a primeira versão organizada do projeto: uma interface de catálogo com páginas de jogos, consoles, acessórios e contato, mantendo a proposta visual gamer original.
+O projeto começou como um site estático acadêmico e está sendo evoluído em versões para demonstrar a progressão técnica do desenvolvimento.
 
-## 📌 v1.0 — Site estático
+## 📌 Versão atual
 
-Nesta versão, o foco é a construção da interface e da estrutura básica do site, sem backend ou banco de dados.
+**v1.1 — Refatoração e organização do código**
 
-### Funcionalidades presentes
+Nesta versão, o foco foi melhorar a estrutura interna do projeto sem alterar sua proposta visual ou adicionar funcionalidades que pertencem às próximas etapas.
 
-- Página inicial com banner em carrossel automático
-- Catálogo de jogos por categoria
-- Catálogo de consoles por fabricante
+## ✨ O que existe atualmente
+
+- Página inicial com banners e carrossel automático
+- Catálogo de jogos
+- Catálogo de consoles
 - Catálogo de acessórios
-- Área de promoções
 - Página de contato
-- Formulário de contato visual
+- Formulário de contato com validação nativa do navegador
 - Navegação entre páginas
-- Layout responsivo básico
-- Efeitos de hover nos cards
-- Identidade visual própria para a SGAMES
+- Layout responsivo
+- Identidade visual gamer
 
-> A barra de pesquisa, o carrinho e alguns atalhos de interface são elementos visuais nesta versão e ainda não possuem lógica de aplicação.
+> O carrinho, a pesquisa de produtos e o envio real do formulário ainda são apenas elementos de interface. Essas funcionalidades serão implementadas em versões futuras.
 
-## 🛠️ Tecnologias
+## 🧹 Alterações da v1.1
 
-- **HTML5** para estrutura e conteúdo
-- **CSS3** para layout, responsividade e identidade visual
-- **JavaScript** para o carrossel da página inicial
-- **Google Fonts** para tipografia
-- **Git/GitHub** para versionamento
+### CSS
 
-## 📂 Estrutura
+O arquivo de estilos deixou de concentrar toda a implementação em um único bloco e passou a ser dividido por responsabilidade:
+
+```text
+css/
+├── base.css         # reset, variáveis, tipografia e estilos globais
+├── components.css   # header, menu, cards, contato, footer etc.
+├── responsive.css   # regras para diferentes tamanhos de tela
+└── style.css        # ponto de entrada dos estilos
+```
+
+Também foram criadas **variáveis CSS** para cores, bordas, sombras e transições, reduzindo repetição e facilitando alterações futuras.
+
+### JavaScript
+
+O código do carrossel foi reorganizado para:
+
+- evitar execução desnecessária em páginas sem carrossel;
+- utilizar escopo isolado com IIFE;
+- utilizar `const` e `let` de forma consistente;
+- separar a função de exibição do slide da troca automática;
+- manter o código preparado para novas funcionalidades.
+
+O JavaScript também identifica automaticamente a página atual e aplica `aria-current="page"` ao item correspondente do menu.
+
+### HTML
+
+- Adicionado `data-page` ao `<body>` para identificação da página.
+- Conteúdo principal das páginas foi agrupado em `<main>` quando aplicável.
+- Script passou a ser carregado com `defer` de forma padronizada.
+- Navegação recebeu estado visual para a página atual.
+- Estrutura e indentação foram padronizadas.
+
+## 🗂️ Estrutura do projeto
 
 ```text
 SGAMES/
+│
 ├── index.html
 ├── jogos.html
 ├── console.html
 ├── acessorios.html
 ├── contato.html
+│
 ├── css/
+│   ├── base.css
+│   ├── components.css
+│   ├── responsive.css
 │   └── style.css
+│
 ├── js/
 │   └── script.js
+│
 ├── fonts/
 │   └── koho-v18-latin-regular.woff2
-└── img/
-    ├── banners e produtos
-    ├── logo
-    ├── QR Code
-    └── imagens de rodapé
+│
+├── img/
+│   ├── banners
+│   ├── jogos
+│   ├── consoles
+│   ├── acessórios
+│   └── outros recursos visuais
+│
+└── README.md
 ```
 
-## 📄 Páginas
+## 🛠️ Tecnologias
 
-| Página | Função |
-|---|---|
-| `index.html` | Página inicial, destaques, benefícios e promoções |
-| `jogos.html` | Catálogo de jogos |
-| `console.html` | Catálogo de consoles |
-| `acessorios.html` | Catálogo de acessórios |
-| `contato.html` | Informações e formulário de contato |
+- HTML5
+- CSS3
+- JavaScript
+- Google Fonts
+- Git / GitHub
 
 ## ▶️ Como executar
 
-O projeto não possui dependências de instalação. Basta abrir o arquivo `index.html` em um navegador.
+Não há dependências de backend nesta versão.
 
-Para desenvolvimento, também é possível utilizar o **Live Server** no Visual Studio Code.
+Basta abrir `index.html` no navegador ou utilizar uma extensão como **Live Server** no Visual Studio Code.
 
-## 🎯 Objetivo da versão
+## 🧭 Roadmap
 
-A v1.0 serve como base para a evolução do projeto. A ideia é manter esta versão como referência e implementar recursos mais avançados gradualmente.
+### v1.0 — Site estático
 
-## 🔮 Próximas versões
+- [x] Estrutura inicial do site
+- [x] Catálogo visual
+- [x] Navegação entre páginas
+- [x] Carrossel de banners
+- [x] Responsividade básica
 
-- **v1.1** — Refatoração e organização do código
-- **v1.2** — Catálogo gerado dinamicamente com JavaScript
-- **v1.3** — Pesquisa, filtros e ordenação
-- **v1.4** — Carrinho de compras e `localStorage`
-- **v1.5** — Página individual de produto
-- **v2.0** — Backend e API
-- **v2.1** — Banco de dados e autenticação
+### v1.1 — Refatoração e organização
+
+- [x] Organização do CSS por responsabilidade
+- [x] Variáveis CSS
+- [x] JavaScript organizado
+- [x] Estrutura HTML padronizada
+- [x] Navegação com página atual identificada
+- [x] Melhorias de acessibilidade
+
+### v1.2 — Catálogo dinâmico
+
+- [ ] Centralizar produtos em JavaScript
+- [ ] Renderizar cards dinamicamente
+- [ ] Implementar pesquisa
+- [ ] Implementar filtros
+- [ ] Implementar ordenação
+
+### v1.3 — Carrinho
+
+- [ ] Adicionar produtos ao carrinho
+- [ ] Alterar quantidade
+- [ ] Remover produtos
+- [ ] Calcular total
+- [ ] Persistir carrinho com `localStorage`
+
+### v2.0 — Full Stack
+
+- [ ] API
+- [ ] Banco de dados
+- [ ] Cadastro e login
+- [ ] Autenticação
+- [ ] Gerenciamento de produtos
+
+## 📚 Objetivo acadêmico
+
+O projeto tem finalidade educacional e busca aplicar, de forma progressiva, conceitos de desenvolvimento web, organização de código, interface, JavaScript e posteriormente desenvolvimento full stack.
 
 ## 📌 Status
 
-**v1.0 — Site estático**
-
-Projeto acadêmico em evolução.
+**Em desenvolvimento.**
