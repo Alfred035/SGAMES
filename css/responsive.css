@@ -73,3 +73,30 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+@media (max-width: 800px) {
+  .catalogo-filtros {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filtro-pesquisa {
+    grid-column: 1 / -1;
+  }
+
+  .resultado-contagem {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .catalogo-filtros {
+    grid-template-columns: 1fr;
+    margin-inline: 10px;
+  }
+
+  .filtro-pesquisa,
+  .resultado-contagem {
+    grid-column: auto;
+  }
+}

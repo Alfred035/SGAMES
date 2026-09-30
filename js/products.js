@@ -1,5 +1,5 @@
 /**
- * SGAMES v1.2
+ * SGAMES v1.3
  * Catálogo centralizado de produtos.
  * Os dados ficam separados da estrutura HTML para facilitar manutenção.
  */

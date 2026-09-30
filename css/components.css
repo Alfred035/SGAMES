@@ -454,3 +454,63 @@
   font-weight: 400;
   margin-right: 4px;
 }
+
+/* ===== V1.3 - SEARCH / FILTERS ===== */
+.catalogo-filtros {
+  margin: 24px auto 10px;
+  padding: 18px;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1.8fr) minmax(150px, 1fr) minmax(150px, 1fr) auto;
+  align-items: end;
+  gap: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-primary);
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filtro-grupo label {
+  color: var(--color-text-muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.filtro-grupo input,
+.filtro-grupo select {
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  background: #111827;
+  color: var(--color-text-light);
+  outline: none;
+  font: inherit;
+}
+
+.filtro-grupo input:focus,
+.filtro-grupo select:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(13, 75, 225, 0.2);
+}
+
+.resultado-contagem {
+  margin: 0;
+  min-width: 150px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-align: right;
+}
+
+.catalogo-filtros + .destaques .titulo {
+  margin-top: 18px;
+}

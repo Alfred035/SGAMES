@@ -197,3 +197,26 @@ O projeto tem finalidade educacional e busca aplicar, de forma progressiva, conc
 ## 📌 Status
 
 **Em desenvolvimento.**
+
+## v1.3 — Pesquisa e filtros
+
+A versão 1.3 adiciona interação ao catálogo sem alterar a arquitetura estática do projeto.
+
+### Novidades
+
+- Pesquisa de produtos por nome.
+- Filtro por categoria.
+- Ordenação por nome e preço.
+- Contador de resultados encontrados.
+- Estado vazio quando nenhum produto corresponde aos filtros.
+- Filtros sincronizados com a URL usando os parâmetros `q`, `categoria` e `ordem`.
+- Pesquisa do cabeçalho integrada ao catálogo da página atual.
+- Layout dos filtros adaptado para telas menores.
+
+### Exemplos de URL
+
+```text
+jogos.html?q=cyber
+console.html?categoria=playstation
+acessorios.html?categoria=headset&ordem=preco-asc
+```
