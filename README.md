@@ -220,3 +220,13 @@ jogos.html?q=cyber
 console.html?categoria=playstation
 acessorios.html?categoria=headset&ordem=preco-asc
 ```
+
+
+## v1.5 — Página de produto
+
+- Página individual em `produto.html?id=<produto>`
+- Informações do produto, preço e categoria
+- Botão para adicionar diretamente ao carrinho
+- Produtos relacionados
+- Tratamento para produto inexistente
+- Integração com o carrinho e `localStorage` da v1.4

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Detalhes de produto da SGAMES.">
+  <title>SGAMES - Produto</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/products.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body data-page="produto">
+
+<header class="topo">
+  <a href="index.html" aria-label="Ir para a página inicial">
+    <img class="logo" src="img/logo.png" alt="Logo SGAMES">
+  </a>
+
+  <div class="barra-pesquisa">
+    <label class="sr-only" for="pesquisa">Pesquisar produtos</label>
+    <input type="search" id="pesquisa" placeholder="Pesquisar" autocomplete="off">
+    <span class="icone-pesquisa" aria-hidden="true">🔍</span>
+  </div>
+
+  <div class="icones-direita" aria-label="Atalhos">
+    <button class="quadrado botao-carrinho" type="button" title="Abrir carrinho" aria-label="Abrir carrinho">🛒<span class="contador-carrinho" aria-hidden="true">0</span></button>
+    <span class="quadrado" title="Menu de navegação" aria-label="Menu">☰</span>
+  </div>
+</header>
+
+<nav class="menu" aria-label="Navegação principal">
+  <a href="index.html">INÍCIO</a>
+  <a href="jogos.html">JOGOS</a>
+  <a href="console.html">CONSOLES</a>
+  <a href="acessorios.html">ACESSÓRIOS</a>
+  <a href="contato.html">CONTATO</a>
+</nav>
+
+<main class="conteudo pagina-produto">
+  <section class="produto-detalhe" data-product-detail aria-live="polite"></section>
+
+  <section class="produtos-relacionados" aria-labelledby="relacionados-titulo">
+    <h2 class="titulo" id="relacionados-titulo">Você também pode gostar</h2>
+    <div class="produtos catalogo" data-related-products></div>
+  </section>
+</main>
+
+<footer class="rodape">
+  <p class="copy">© 2026 SGAMES — Todos os direitos reservados.</p>
+</footer>
+
+<div id="carrinho-root"></div>
+
+</body>
+</html>

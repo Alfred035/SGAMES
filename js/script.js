@@ -251,6 +251,15 @@
       price.textContent = formatPrice(product.price);
     }
 
+    const actions = document.createElement('div');
+    actions.className = 'produto-acoes';
+
+    const detailsLink = document.createElement('a');
+    detailsLink.className = 'botao-ver-produto';
+    detailsLink.href = `produto.html?id=${encodeURIComponent(product.id)}`;
+    detailsLink.textContent = 'Ver produto';
+    detailsLink.setAttribute('aria-label', `Ver detalhes de ${product.name}`);
+
     const addButton = document.createElement('button');
     addButton.type = 'button';
     addButton.className = 'botao-adicionar-carrinho';
@@ -258,7 +267,8 @@
     addButton.textContent = 'Adicionar ao carrinho';
     addButton.setAttribute('aria-label', `Adicionar ${product.name} ao carrinho`);
 
-    card.append(image, title, price, addButton);
+    actions.append(detailsLink, addButton);
+    card.append(image, title, price, actions);
     return card;
   };
 
@@ -496,6 +506,71 @@
     });
 
     applyFilters({ query: initialQuery, category: initialCategory, order: initialOrder });
+  }
+
+  // ===== PÁGINA DE PRODUTO =====
+  const productDetail = document.querySelector('[data-product-detail]');
+
+  if (productDetail && typeof products !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id');
+    const product = products.find((item) => item.id === productId);
+
+    const setProductMessage = (title, message) => {
+      productDetail.innerHTML = `
+        <div class="produto-nao-encontrado">
+          <span aria-hidden="true">🎮</span>
+          <h1>${title}</h1>
+          <p>${message}</p>
+          <a class="botao-voltar-produtos" href="index.html">Voltar para a loja</a>
+        </div>`;
+    };
+
+    if (!product) {
+      setProductMessage('Produto não encontrado', 'O produto solicitado não existe ou não está mais disponível no catálogo.');
+      document.title = 'SGAMES - Produto não encontrado';
+    } else {
+      const typeLabels = { jogo: 'Jogo', console: 'Console', acessorio: 'Acessório' };
+      const categoryLabelsDetail = {
+        casuais: 'Casuais', esportes: 'Esportes', corrida: 'Corrida', destaques: 'Destaques',
+        playstation: 'PlayStation', xbox: 'Xbox', nintendo: 'Nintendo',
+        headset: 'Headset', controle: 'Controle', vr: 'Óculos VR', mouse: 'Mouse'
+      };
+      const descriptionByType = {
+        jogo: 'Encontre este título no catálogo SGAMES e confira o preço atual para sua coleção gamer.',
+        console: 'Console disponível no catálogo SGAMES para completar sua experiência de jogos.',
+        acessorio: 'Acessório gamer disponível no catálogo SGAMES para complementar seu setup.'
+      };
+
+      document.title = `SGAMES - ${product.name}`;
+      productDetail.innerHTML = `
+        <div class="produto-detalhe-imagem">
+          <img src="${product.image}" alt="Imagem de ${product.name}">
+        </div>
+        <div class="produto-detalhe-info">
+          <p class="produto-detalhe-kicker">${typeLabels[product.type] || 'Produto'} · ${categoryLabelsDetail[product.category] || product.category}</p>
+          <h1>${product.name}</h1>
+          <div class="produto-detalhe-preco">
+            ${product.oldPrice ? `<del>${formatPrice(product.oldPrice)}</del>` : ''}
+            <strong>${formatPrice(product.price)}</strong>
+          </div>
+          <p class="produto-detalhe-descricao">${product.description || descriptionByType[product.type] || 'Produto disponível no catálogo SGAMES.'}</p>
+          <div class="produto-detalhe-meta">
+            <span>Categoria: <strong>${categoryLabelsDetail[product.category] || product.category}</strong></span>
+            <span>Disponibilidade: <strong>Em estoque</strong></span>
+          </div>
+          <button class="botao-detalhe-carrinho" type="button" data-add-cart="${product.id}">Adicionar ao carrinho</button>
+          <a class="botao-voltar-produtos" href="${product.type === 'jogo' ? 'jogos.html' : product.type === 'console' ? 'console.html' : 'acessorios.html'}">Voltar ao catálogo</a>
+        </div>`;
+
+      const related = products
+        .filter((item) => item.type === product.type && item.id !== product.id)
+        .slice(0, 4);
+      const relatedContainer = document.querySelector('[data-related-products]');
+      if (relatedContainer) {
+        related.forEach((item) => relatedContainer.append(createProductCard(item)));
+      }
+    }
   }
 
   // ===== CARROSSEL =====
