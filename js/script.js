@@ -1,5 +1,5 @@
 /**
- * SGAMES v1.3
+ * SGAMES v1.4
  * Navegação, carrossel, catálogo dinâmico, pesquisa, filtros e ordenação.
  */
 
@@ -14,6 +14,211 @@
 
   const formatPrice = (price) =>
     price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  // ===== CARRINHO / LOCALSTORAGE =====
+  const CART_KEY = 'sgames-cart-v1';
+  let cart = loadCart();
+
+  function loadCart() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(CART_KEY));
+      return Array.isArray(stored) ? stored : [];
+    } catch {
+      return [];
+    }
+  }
+
+  const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+  const getProduct = (id) =>
+    typeof products !== 'undefined' ? products.find((product) => product.id === id) : null;
+
+  const getCartCount = () => cart.reduce((total, item) => total + item.quantity, 0);
+
+  const getCartTotal = () => cart.reduce((total, item) => {
+    const product = getProduct(item.id);
+    return total + (product ? product.price * item.quantity : 0);
+  }, 0);
+
+  const updateCartBadge = () => {
+    const count = getCartCount();
+    document.querySelectorAll('.contador-carrinho').forEach((badge) => {
+      badge.textContent = count;
+      badge.hidden = count === 0;
+    });
+  };
+
+  const addToCart = (productId) => {
+    const product = getProduct(productId);
+    if (!product) return;
+
+    const existing = cart.find((item) => item.id === productId);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ id: productId, quantity: 1 });
+    }
+
+    saveCart();
+    updateCartBadge();
+    renderCart();
+    openCart();
+  };
+
+  const changeQuantity = (productId, delta) => {
+    const item = cart.find((entry) => entry.id === productId);
+    if (!item) return;
+    item.quantity += delta;
+    if (item.quantity <= 0) cart = cart.filter((entry) => entry.id !== productId);
+    saveCart();
+    updateCartBadge();
+    renderCart();
+  };
+
+  const removeFromCart = (productId) => {
+    cart = cart.filter((item) => item.id !== productId);
+    saveCart();
+    updateCartBadge();
+    renderCart();
+  };
+
+  const createCartRoot = () => {
+    const root = document.querySelector('#carrinho-root');
+    if (!root) return null;
+
+    root.innerHTML = `
+      <div class="carrinho-overlay" data-cart-close></div>
+      <aside class="carrinho-painel" aria-label="Carrinho de compras" aria-hidden="true">
+        <header class="carrinho-cabecalho">
+          <div>
+            <p class="carrinho-kicker">SGAMES</p>
+            <h2>Seu carrinho</h2>
+          </div>
+          <button class="carrinho-fechar" type="button" data-cart-close aria-label="Fechar carrinho">×</button>
+        </header>
+        <div class="carrinho-itens" aria-live="polite"></div>
+        <footer class="carrinho-rodape">
+          <div class="carrinho-total"><span>Total</span><strong>R$ 0,00</strong></div>
+          <button class="botao-finalizar" type="button" disabled>Finalizar compra</button>
+          <button class="botao-limpar" type="button">Limpar carrinho</button>
+        </footer>
+      </aside>`;
+
+    root.querySelectorAll('[data-cart-close]').forEach((element) =>
+      element.addEventListener('click', closeCart)
+    );
+    root.querySelector('.botao-limpar')?.addEventListener('click', () => {
+      if (!cart.length) return;
+      cart = [];
+      saveCart();
+      updateCartBadge();
+      renderCart();
+    });
+
+    return root;
+  };
+
+  let cartRoot = createCartRoot();
+
+  const openCart = () => {
+    if (!cartRoot) return;
+    const panel = cartRoot.querySelector('.carrinho-painel');
+    cartRoot.classList.add('aberto');
+    panel?.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('carrinho-aberto');
+  };
+
+  function closeCart() {
+    if (!cartRoot) return;
+    const panel = cartRoot.querySelector('.carrinho-painel');
+    cartRoot.classList.remove('aberto');
+    panel?.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('carrinho-aberto');
+  }
+
+  const renderCart = () => {
+    if (!cartRoot) return;
+    const itemsContainer = cartRoot.querySelector('.carrinho-itens');
+    const totalElement = cartRoot.querySelector('.carrinho-total strong');
+    const finishButton = cartRoot.querySelector('.botao-finalizar');
+    const clearButton = cartRoot.querySelector('.botao-limpar');
+    if (!itemsContainer || !totalElement) return;
+
+    if (!cart.length) {
+      itemsContainer.innerHTML = `
+        <div class="carrinho-vazio">
+          <span aria-hidden="true">🛒</span>
+          <h3>Seu carrinho está vazio</h3>
+          <p>Adicione produtos para começar sua compra.</p>
+        </div>`;
+    } else {
+      itemsContainer.replaceChildren(...cart.map((item) => {
+        const product = getProduct(item.id);
+        const wrapper = document.createElement('article');
+        wrapper.className = 'item-carrinho';
+        if (!product) return wrapper;
+
+        const image = document.createElement('img');
+        image.src = product.image;
+        image.alt = '';
+        image.loading = 'lazy';
+
+        const info = document.createElement('div');
+        info.className = 'item-carrinho-info';
+        const title = document.createElement('h3');
+        title.textContent = product.name;
+        const price = document.createElement('p');
+        price.textContent = formatPrice(product.price);
+        info.append(title, price);
+
+        const controls = document.createElement('div');
+        controls.className = 'item-carrinho-controles';
+        const decrease = document.createElement('button');
+        decrease.type = 'button'; decrease.textContent = '−';
+        decrease.setAttribute('aria-label', `Diminuir quantidade de ${product.name}`);
+        decrease.addEventListener('click', () => changeQuantity(product.id, -1));
+        const quantity = document.createElement('span');
+        quantity.textContent = item.quantity;
+        quantity.setAttribute('aria-label', `Quantidade: ${item.quantity}`);
+        const increase = document.createElement('button');
+        increase.type = 'button'; increase.textContent = '+';
+        increase.setAttribute('aria-label', `Aumentar quantidade de ${product.name}`);
+        increase.addEventListener('click', () => changeQuantity(product.id, 1));
+        controls.append(decrease, quantity, increase);
+
+        const remove = document.createElement('button');
+        remove.type = 'button'; remove.className = 'item-carrinho-remover';
+        remove.textContent = 'Remover';
+        remove.addEventListener('click', () => removeFromCart(product.id));
+
+        wrapper.append(image, info, controls, remove);
+        return wrapper;
+      }));
+    }
+
+    totalElement.textContent = formatPrice(getCartTotal());
+    if (finishButton) finishButton.disabled = cart.length === 0;
+    if (clearButton) clearButton.disabled = cart.length === 0;
+  };
+
+  const bindCartEvents = () => {
+    document.querySelectorAll('.botao-carrinho').forEach((button) => {
+      button.addEventListener('click', openCart);
+    });
+
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-add-cart]');
+      if (button) addToCart(button.dataset.addCart);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeCart();
+    });
+  };
+
+  bindCartEvents();
+  updateCartBadge();
+  renderCart();
 
   // ===== NAVEGAÇÃO =====
   document.querySelectorAll('.menu a').forEach((link) => {
@@ -46,7 +251,14 @@
       price.textContent = formatPrice(product.price);
     }
 
-    card.append(image, title, price);
+    const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.className = 'botao-adicionar-carrinho';
+    addButton.dataset.addCart = product.id;
+    addButton.textContent = 'Adicionar ao carrinho';
+    addButton.setAttribute('aria-label', `Adicionar ${product.name} ao carrinho`);
+
+    card.append(image, title, price, addButton);
     return card;
   };
 

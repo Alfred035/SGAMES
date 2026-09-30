@@ -174,7 +174,7 @@ Basta abrir `index.html` no navegador ou utilizar uma extensão como **Live Serv
 - [ ] Implementar filtros
 - [ ] Implementar ordenação
 
-### v1.3 — Carrinho
+### v1.4 — Carrinho
 
 - [ ] Adicionar produtos ao carrinho
 - [ ] Alterar quantidade
@@ -198,7 +198,7 @@ O projeto tem finalidade educacional e busca aplicar, de forma progressiva, conc
 
 **Em desenvolvimento.**
 
-## v1.3 — Pesquisa e filtros
+## v1.4 — Pesquisa e filtros
 
 A versão 1.3 adiciona interação ao catálogo sem alterar a arquitetura estática do projeto.
 
