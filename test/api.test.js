@@ -40,6 +40,12 @@ test('API, filtros, preços, arquivos públicos e persistência SQLite', async (
     assert.equal(home.status, 200);
     assert.match(await home.text(), /SGAMES/);
     assert.equal((await fetch(base + '/js/script.js')).status, 200);
+    const head = await fetch(base + '/api/products', { method: 'HEAD' });
+    assert.equal(head.status, 200);
+    assert.equal(await head.text(), '');
+    assert.equal(head.headers.get('x-content-type-options'), 'nosniff');
+    assert.match(head.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+    assert.equal((await fetch(base + '/conta.html')).status, 200);
   } finally {
     await new Promise(resolve => app.close(resolve));
     db.close();

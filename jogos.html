@@ -6,8 +6,10 @@
     <meta name="description" content="SGAMES, loja gamer fictícia com jogos, consoles, acessórios e promoções.">
     <title>SGAMES - Jogos</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/products.js" defer></script>
-    <script src="js/script.js" defer></script>
+    <script src="js/api.js" defer></script>
+  <script src="js/products.js" defer></script>
+    <script src="js/auth.js" defer></script>
+  <script src="js/script.js" defer></script>
 </head>
 <body data-page="jogos">
 
@@ -23,8 +25,8 @@
     </div>
 
     <div class="icones-direita" aria-label="Atalhos">
-        <button class="quadrado botao-carrinho" type="button" title="Abrir carrinho" aria-label="Abrir carrinho">🛒<span class="contador-carrinho" aria-hidden="true">0</span></button>
-        <span class="quadrado" title="Menu de navegação" aria-label="Menu">☰</span>
+        <button class="quadrado botao-carrinho" type="button" title="Abrir carrinho" aria-label="Abrir carrinho">🛒<span class="contador-carrinho" aria-hidden="true" hidden>0</span></button>
+        <a class="botao-conta" href="conta.html" data-account-link>Entrar</a>
     </div>
 </header>
 
@@ -37,6 +39,11 @@
 </nav>
 
 <main class="conteudo">
+
+<section class="destaques">
+    <h2 class="titulo">Jogos em destaque</h2>
+    <div class="produtos catalogo" data-catalog="jogo" data-category="destaques"></div>
+</section>
 
 <section class="destaques">
     <h2 class="titulo">Jogos Casuais</h2>

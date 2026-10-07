@@ -6,6 +6,8 @@ export function openDatabase(path) {
   if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
   const db = new DatabaseSync(path);
   db.exec(`
+    PRAGMA foreign_keys = ON;
+    PRAGMA busy_timeout = 5000;
     PRAGMA journal_mode = WAL;
     CREATE TABLE IF NOT EXISTS catalog (
       id TEXT PRIMARY KEY,
@@ -40,6 +42,25 @@ export function openDatabase(path) {
       throw error;
     }
   }
+  // Migração aditiva: mantém o catálogo e os dados existentes da v2.0.
+  db.exec(`
+    BEGIN;
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+      password_hash TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS sessions (
+      token_hash TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      expires_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS sessions_expiry ON sessions(expires_at);
+    INSERT OR IGNORE INTO migrations VALUES (2);
+    COMMIT;
+  `);
   return db;
 }
 

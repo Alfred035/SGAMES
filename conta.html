@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Entre ou crie sua conta na SGAMES.">
+  <title>SGAMES - Minha conta</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/api.js" defer></script>
+  <script src="js/products.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body data-page="conta">
+<header class="topo">
+  <a href="index.html" aria-label="Ir para a página inicial"><img class="logo" src="img/logo.png" alt="Logo SGAMES"></a>
+  <div class="barra-pesquisa">
+    <label class="sr-only" for="pesquisa">Pesquisar produtos</label>
+    <input type="search" id="pesquisa" placeholder="Pesquisar" autocomplete="off">
+    <span class="icone-pesquisa" aria-hidden="true">🔍</span>
+  </div>
+  <div class="icones-direita" aria-label="Atalhos">
+    <button class="quadrado botao-carrinho" type="button" aria-label="Abrir carrinho">🛒<span class="contador-carrinho" aria-hidden="true" hidden>0</span></button>
+    <a class="botao-conta" href="conta.html" data-account-link>Minha conta</a>
+  </div>
+</header>
+<nav class="menu" aria-label="Navegação principal">
+  <a href="index.html">INÍCIO</a>
+  <a href="jogos.html">JOGOS</a>
+  <a href="console.html">CONSOLES</a>
+  <a href="acessorios.html">ACESSÓRIOS</a>
+  <a href="contato.html">CONTATO</a>
+</nav>
+<main class="conteudo pagina-conta">
+  <header class="conta-intro">
+    <p class="carrinho-kicker">SUA CONTA SGAMES</p>
+    <h1>Seu próximo jogo começa aqui</h1>
+    <p>Entre na sua conta ou crie uma para fazer parte da SGAMES.</p>
+  </header>
+  <p data-account-loading role="status">Verificando sua sessão…</p>
+  <p id="auth-status" class="auth-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  <div class="auth-grid" data-auth-guest hidden>
+    <section class="auth-card" aria-labelledby="login-titulo">
+      <h2 id="login-titulo">Entrar</h2>
+      <p>Já tem uma conta? É só entrar.</p>
+      <form class="auth-form" data-auth-form="login" method="post" action="/api/auth/login">
+        <label for="login-email">E-mail</label>
+        <input id="login-email" name="email" type="email" autocomplete="username" maxlength="254" required>
+        <label for="login-password">Senha</label>
+        <div class="senha-campo">
+          <input id="login-password" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required>
+          <button type="button" data-show-password="login-password" aria-controls="login-password" aria-pressed="false" aria-label="Mostrar ou ocultar a senha de login">Mostrar</button>
+        </div>
+        <button class="auth-submit" type="submit">Entrar na conta</button>
+      </form>
+    </section>
+    <section class="auth-card" aria-labelledby="cadastro-titulo">
+      <h2 id="cadastro-titulo">Criar conta</h2>
+      <p>Cadastre-se com seu nome e e-mail.</p>
+      <form class="auth-form" data-auth-form="register" method="post" action="/api/auth/register">
+        <label for="register-name">Nome</label>
+        <input id="register-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="80" required>
+        <label for="register-email">E-mail</label>
+        <input id="register-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+        <label for="register-password">Senha</label>
+        <div class="senha-campo">
+          <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" aria-describedby="senha-ajuda" required>
+          <button type="button" data-show-password="register-password" aria-controls="register-password" aria-pressed="false" aria-label="Mostrar ou ocultar a senha de cadastro">Mostrar</button>
+        </div>
+        <p id="senha-ajuda" class="campo-ajuda">Use entre 10 e 128 caracteres. Prefira uma frase longa e exclusiva.</p>
+        <label for="register-confirm">Confirmar senha</label>
+        <input id="register-confirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+        <button class="auth-submit" type="submit">Criar minha conta</button>
+      </form>
+    </section>
+  </div>
+  <section class="auth-card perfil-card" data-auth-profile hidden aria-labelledby="perfil-titulo">
+    <p class="carrinho-kicker">VOCÊ ESTÁ CONECTADO</p>
+    <h2 id="perfil-titulo" tabindex="-1">Olá, <span data-user-name></span>!</h2>
+    <dl class="perfil-dados">
+      <dt>E-mail</dt><dd data-user-email></dd>
+      <dt>Membro desde</dt><dd data-user-date></dd>
+    </dl>
+    <div class="perfil-acoes">
+      <a class="auth-submit" href="jogos.html">Explorar jogos</a>
+      <button class="auth-secondary" type="button" data-logout>Sair da conta</button>
+    </div>
+  </section>
+  <noscript><p>Ative o JavaScript do navegador para acessar sua conta.</p></noscript>
+</main>
+<footer class="rodape"><p class="copy">© 2026 SGAMES — Todos os direitos reservados.</p></footer>
+<div id="carrinho-root"></div>
+</body>
+</html>

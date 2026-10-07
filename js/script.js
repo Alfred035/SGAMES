@@ -1,16 +1,49 @@
 /**
- * SGAMES v2.0
+ * SGAMES v2.1
  * Navegação, carrossel, catálogo dinâmico, pesquisa, filtros e ordenação.
  */
 
 (async () => {
   'use strict';
 
+  const currentPage = document.body.dataset.page;
+  const searchInput = document.querySelector('#pesquisa');
+  document.querySelectorAll('.menu a').forEach(link => {
+    if (link.getAttribute('href')?.replace('.html', '') === currentPage) link.setAttribute('aria-current', 'page');
+  });
+  // A navegação e o contato continuam funcionando se o catálogo estiver offline.
+  if (!document.querySelector('[data-catalog]') || currentPage === 'index') {
+    searchInput?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') window.location.href = `jogos.html?q=${encodeURIComponent(searchInput.value.trim())}`;
+    });
+  }
+  const contactForm = document.querySelector('.formulario');
+  contactForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    let notice = contactForm.querySelector('[role="status"]');
+    if (!notice) {
+      notice = document.createElement('p');
+      notice.setAttribute('role', 'status');
+      contactForm.append(notice);
+    }
+    notice.textContent = 'Este formulário é uma demonstração e não envia mensagens. Para entrar em contato, use o WhatsApp ou o e-mail informado.';
+  });
+  const slidesContainer = document.querySelector('.slides');
+  const slides = document.querySelectorAll('.slide');
+  if (slidesContainer && slides.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let currentSlide = 0;
+    window.setInterval(() => {
+      if (document.hidden) return;
+      currentSlide = (currentSlide + 1) % slides.length;
+      slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }, 5000);
+  }
+
   if (!await catalogReady) {
     const message = document.createElement('p');
     message.className = 'catalogo-erro';
     message.setAttribute('role', 'alert');
-    message.textContent = 'Não foi possível carregar a loja. Verifique a conexão e tente novamente.';
+    message.textContent = catalogError || 'Não foi possível carregar o catálogo. Tente novamente.';
     const retry = document.createElement('button');
     retry.type = 'button';
     retry.textContent = 'Tentar novamente';
@@ -20,14 +53,15 @@
     return;
   }
 
-  const currentPage = document.body.dataset.page;
-  const searchInput = document.querySelector('#pesquisa');
   const catalogContainers = [...document.querySelectorAll('[data-catalog]')];
   const productCatalogs = catalogContainers.filter((container) => container.dataset.catalog !== 'promocao');
   const hasProductCatalog = productCatalogs.length > 0 && typeof products !== 'undefined';
 
   const formatPrice = (price) =>
     price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[character]);
 
   // ===== CARRINHO / LOCALSTORAGE =====
   const CART_KEY = 'sgames-cart-v1';
@@ -36,13 +70,26 @@
   function loadCart() {
     try {
       const stored = JSON.parse(localStorage.getItem(CART_KEY));
-      return Array.isArray(stored) ? stored : [];
+      if (!Array.isArray(stored)) return [];
+      const valid = new Map();
+      for (const item of stored) {
+        if (!item || !products.some(product => product.id === item.id) || !Number.isInteger(item.quantity) || item.quantity < 1) continue;
+        valid.set(item.id, Math.min(99, (valid.get(item.id) || 0) + item.quantity));
+      }
+      return [...valid].map(([id, quantity]) => ({ id, quantity }));
     } catch {
       return [];
     }
   }
 
-  const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  const saveCart = () => {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {
+      const notice = document.querySelector('.carrinho-status');
+      if (notice) notice.textContent = 'Não foi possível salvar o carrinho no navegador. Ele ficará disponível nesta página.';
+    }
+  };
 
   const getProduct = (id) =>
     typeof products !== 'undefined' ? products.find((product) => product.id === id) : null;
@@ -51,8 +98,8 @@
 
   const getCartTotal = () => cart.reduce((total, item) => {
     const product = getProduct(item.id);
-    return total + (product ? product.price * item.quantity : 0);
-  }, 0);
+    return total + (product ? Math.round(product.price * 100) * item.quantity : 0);
+  }, 0) / 100;
 
   const updateCartBadge = () => {
     const count = getCartCount();
@@ -68,7 +115,7 @@
 
     const existing = cart.find((item) => item.id === productId);
     if (existing) {
-      existing.quantity += 1;
+      existing.quantity = Math.min(99, existing.quantity + 1);
     } else {
       cart.push({ id: productId, quantity: 1 });
     }
@@ -82,7 +129,7 @@
   const changeQuantity = (productId, delta) => {
     const item = cart.find((entry) => entry.id === productId);
     if (!item) return;
-    item.quantity += delta;
+    item.quantity = Math.min(99, item.quantity + delta);
     if (item.quantity <= 0) cart = cart.filter((entry) => entry.id !== productId);
     saveCart();
     updateCartBadge();
@@ -102,7 +149,7 @@
 
     root.innerHTML = `
       <div class="carrinho-overlay" data-cart-close></div>
-      <aside class="carrinho-painel" aria-label="Carrinho de compras" aria-hidden="true">
+      <aside class="carrinho-painel" role="dialog" aria-modal="true" aria-label="Carrinho de compras" aria-hidden="true" inert>
         <header class="carrinho-cabecalho">
           <div>
             <p class="carrinho-kicker">SGAMES</p>
@@ -113,7 +160,8 @@
         <div class="carrinho-itens" aria-live="polite"></div>
         <footer class="carrinho-rodape">
           <div class="carrinho-total"><span>Total</span><strong>R$ 0,00</strong></div>
-          <button class="botao-finalizar" type="button" disabled>Finalizar compra</button>
+          <p class="carrinho-status" role="status"></p>
+          <button class="botao-finalizar" type="button" disabled>Checkout em breve</button>
           <button class="botao-limpar" type="button">Limpar carrinho</button>
         </footer>
       </aside>`;
@@ -132,29 +180,36 @@
     return root;
   };
 
-  let cartRoot = createCartRoot();
+  const cartRoot = createCartRoot();
+  let previousFocus;
 
   const openCart = () => {
     if (!cartRoot) return;
+    if (!cartRoot.classList.contains('aberto')) previousFocus = document.activeElement;
     const panel = cartRoot.querySelector('.carrinho-painel');
     cartRoot.classList.add('aberto');
     panel?.setAttribute('aria-hidden', 'false');
+    if (panel) panel.inert = false;
     document.body.classList.add('carrinho-aberto');
+    document.querySelectorAll('header.topo, nav.menu, main, footer.rodape').forEach(element => { element.inert = true; });
+    panel?.querySelector('.carrinho-fechar').focus();
   };
 
   function closeCart() {
-    if (!cartRoot) return;
+    if (!cartRoot?.classList.contains('aberto')) return;
     const panel = cartRoot.querySelector('.carrinho-painel');
     cartRoot.classList.remove('aberto');
     panel?.setAttribute('aria-hidden', 'true');
+    if (panel) panel.inert = true;
     document.body.classList.remove('carrinho-aberto');
+    document.querySelectorAll('header.topo, nav.menu, main, footer.rodape').forEach(element => { element.inert = false; });
+    if (previousFocus?.isConnected) previousFocus.focus();
   }
 
   const renderCart = () => {
     if (!cartRoot) return;
     const itemsContainer = cartRoot.querySelector('.carrinho-itens');
     const totalElement = cartRoot.querySelector('.carrinho-total strong');
-    const finishButton = cartRoot.querySelector('.botao-finalizar');
     const clearButton = cartRoot.querySelector('.botao-limpar');
     if (!itemsContainer || !totalElement) return;
 
@@ -211,7 +266,6 @@
     }
 
     totalElement.textContent = formatPrice(getCartTotal());
-    if (finishButton) finishButton.disabled = cart.length === 0;
     if (clearButton) clearButton.disabled = cart.length === 0;
   };
 
@@ -227,19 +281,24 @@
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') closeCart();
+      if (event.key === 'Tab' && cartRoot?.classList.contains('aberto')) {
+        const controls = [...cartRoot.querySelectorAll('button:not(:disabled), a[href]')];
+        const first = controls[0];
+        const last = controls.at(-1);
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
     });
   };
 
   bindCartEvents();
   updateCartBadge();
   renderCart();
-
-  // ===== NAVEGAÇÃO =====
-  document.querySelectorAll('.menu a').forEach((link) => {
-    const page = link.getAttribute('href')?.replace('.html', '');
-    if (page === currentPage) {
-      link.setAttribute('aria-current', 'page');
-    }
+  window.addEventListener('storage', event => {
+    if (event.key !== CART_KEY && event.key !== null) return;
+    cart = loadCart();
+    updateCartBadge();
+    renderCart();
   });
 
   // ===== CATÁLOGO =====
@@ -346,7 +405,8 @@
 
   const getAvailableCategories = () => {
     const type = getCatalogType();
-    return [...new Set(products.filter((product) => product.type === type).map((product) => product.category))];
+    const visibleCategories = new Set(productCatalogs.map(container => container.dataset.category));
+    return [...new Set(products.filter((product) => product.type === type && visibleCategories.has(product.category)).map((product) => product.category))];
   };
 
   const createFilterToolbar = () => {
@@ -462,11 +522,20 @@
     if (countElement) {
       countElement.textContent = `${totalVisible} ${totalVisible === 1 ? 'produto encontrado' : 'produtos encontrados'}`;
     }
+    const empty = document.querySelector('.catalogo-vazio');
+    if (empty) empty.hidden = totalVisible !== 0;
   };
 
   renderInitialCatalogs();
 
   const toolbar = createFilterToolbar();
+  if (toolbar) {
+    const empty = document.createElement('p');
+    empty.className = 'catalogo-vazio';
+    empty.textContent = 'Nenhum produto encontrado. Tente outro nome ou categoria.';
+    empty.hidden = true;
+    toolbar.toolbar.after(empty);
+  }
 
   if (hasProductCatalog) {
     const params = new URLSearchParams(window.location.search);
@@ -496,8 +565,8 @@
       window.history.replaceState(null, '', queryString ? `?${queryString}` : window.location.pathname);
     };
 
-    const updateFilters = () => {
-      const query = toolbar?.filterSearch.value || searchInput?.value || '';
+    const updateFilters = (event) => {
+      const query = event?.target === searchInput ? searchInput.value : toolbar?.filterSearch.value ?? '';
       const category = toolbar?.categorySelect.value || 'todos';
       const order = toolbar?.sortSelect.value || 'padrao';
 
@@ -515,11 +584,12 @@
     searchInput?.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         searchInput.value = '';
-        updateFilters();
+        updateFilters({ target: searchInput });
       }
     });
 
-    applyFilters({ query: initialQuery, category: initialCategory, order: initialOrder });
+    syncSearch(initialQuery);
+    applyFilters({ query: initialQuery, category: toolbar.categorySelect.value, order: toolbar.sortSelect.value });
   }
 
   // ===== PÁGINA DE PRODUTO =====
@@ -559,21 +629,21 @@
       document.title = `SGAMES - ${product.name}`;
       productDetail.innerHTML = `
         <div class="produto-detalhe-imagem">
-          <img src="${product.image}" alt="Imagem de ${product.name}">
+          <img src="${escapeHtml(product.image)}" alt="Imagem de ${escapeHtml(product.name)}">
         </div>
         <div class="produto-detalhe-info">
-          <p class="produto-detalhe-kicker">${typeLabels[product.type] || 'Produto'} · ${categoryLabelsDetail[product.category] || product.category}</p>
-          <h1>${product.name}</h1>
+          <p class="produto-detalhe-kicker">${typeLabels[product.type] || 'Produto'} · ${escapeHtml(categoryLabelsDetail[product.category] || product.category)}</p>
+          <h1>${escapeHtml(product.name)}</h1>
           <div class="produto-detalhe-preco">
             ${product.oldPrice ? `<del>${formatPrice(product.oldPrice)}</del>` : ''}
             <strong>${formatPrice(product.price)}</strong>
           </div>
-          <p class="produto-detalhe-descricao">${product.description || descriptionByType[product.type] || 'Produto disponível no catálogo SGAMES.'}</p>
+          <p class="produto-detalhe-descricao">${escapeHtml(product.description || descriptionByType[product.type] || 'Produto disponível no catálogo SGAMES.')}</p>
           <div class="produto-detalhe-meta">
-            <span>Categoria: <strong>${categoryLabelsDetail[product.category] || product.category}</strong></span>
+            <span>Categoria: <strong>${escapeHtml(categoryLabelsDetail[product.category] || product.category)}</strong></span>
             <span>Disponibilidade: <strong>Em estoque</strong></span>
           </div>
-          <button class="botao-detalhe-carrinho" type="button" data-add-cart="${product.id}">Adicionar ao carrinho</button>
+          <button class="botao-detalhe-carrinho" type="button" data-add-cart="${escapeHtml(product.id)}">Adicionar ao carrinho</button>
           <a class="botao-voltar-produtos" href="${product.type === 'jogo' ? 'jogos.html' : product.type === 'console' ? 'console.html' : 'acessorios.html'}">Voltar ao catálogo</a>
         </div>`;
 
@@ -587,24 +657,4 @@
     }
   }
 
-  // ===== CARROSSEL =====
-  const slidesContainer = document.querySelector('.slides');
-  const slides = document.querySelectorAll('.slide');
-
-  if (!slidesContainer || slides.length <= 1) return;
-
-  let currentSlide = 0;
-  const slideInterval = 5000;
-
-  const showSlide = (index) => {
-    slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-  };
-
-  const showNextSlide = () => {
-    currentSlide = (currentSlide + 1) % slides.length;
-    showSlide(currentSlide);
-  };
-
-  showSlide(currentSlide);
-  window.setInterval(showNextSlide, slideInterval);
 })();
