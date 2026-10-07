@@ -1,10 +1,24 @@
 /**
- * SGAMES v1.4
+ * SGAMES v2.0
  * Navegação, carrossel, catálogo dinâmico, pesquisa, filtros e ordenação.
  */
 
-(() => {
+(async () => {
   'use strict';
+
+  if (!await catalogReady) {
+    const message = document.createElement('p');
+    message.className = 'catalogo-erro';
+    message.setAttribute('role', 'alert');
+    message.textContent = 'Não foi possível carregar a loja. Verifique a conexão e tente novamente.';
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.textContent = 'Tentar novamente';
+    retry.addEventListener('click', () => window.location.reload());
+    message.append(' ', retry);
+    document.querySelector('main')?.prepend(message);
+    return;
+  }
 
   const currentPage = document.body.dataset.page;
   const searchInput = document.querySelector('#pesquisa');

@@ -6,9 +6,9 @@ O projeto começou como um site estático acadêmico e está sendo evoluído em 
 
 ## 📌 Versão atual
 
-**v1.2 — Catálogo dinâmico**
+**v2.0 — API + banco de dados (primeira etapa)**
 
-Nesta versão, o foco foi melhorar a estrutura interna do projeto sem alterar sua proposta visual ou adicionar funcionalidades que pertencem às próximas etapas.
+O catálogo e as promoções são persistidos em SQLite e consultados por uma API Node.js. As páginas HTML são servidas pelo mesmo backend. Login, pedidos e gerenciamento administrativo ainda não foram implementados.
 
 ## ✨ O que existe atualmente
 
@@ -23,7 +23,7 @@ Nesta versão, o foco foi melhorar a estrutura interna do projeto sem alterar su
 - Layout responsivo
 - Identidade visual gamer
 
-> O catálogo agora é controlado por dados em JavaScript. Pesquisa, filtros, carrinho e backend continuam reservados para versões futuras.
+> O catálogo agora vem da API. Pesquisa, filtros, página de produto e carrinho estão disponíveis; o carrinho continua persistido no navegador com localStorage.
 
 ## 🧹 Alterações da v1.1
 
@@ -143,9 +143,41 @@ SGAMES/
 
 ## ▶️ Como executar
 
-Não há dependências de backend nesta versão.
+Requer **Node.js 24 ou superior**, com SQLite nativo. Não há pacotes externos nem serviço de banco separado.
 
-Basta abrir `index.html` no navegador ou utilizar uma extensão como **Live Server** no Visual Studio Code.
+```sh
+npm ci
+npm start
+```
+
+Abra o site na porta **3000** do servidor. Para reiniciar automaticamente ao modificar o backend, use `npm run dev`. Abrir o HTML diretamente ou usar Live Server não fornece a API necessária nesta versão.
+
+```sh
+npm test
+```
+
+O teste de integração usa um banco temporário e verifica a API, pesquisa, filtros, preços, persistência e isolamento de arquivos internos.
+
+### Banco de dados
+
+Na primeira inicialização, o backend cria `data/sgames.sqlite` e importa 37 produtos e 4 promoções de `server/catalog.json`. O seed é aplicado uma vez, dentro de uma transação; reiniciar não sobrescreve os dados. Os valores monetários são armazenados em centavos inteiros e expostos em reais na API.
+
+`data/` é ignorado pelo Git. Faça backup do banco antes de removê-lo. Alterar o JSON de seed não atualiza um banco já existente.
+
+Variáveis opcionais: `PORT` (padrão `3000`), `HOST` (padrão `127.0.0.1`) e `DATABASE_PATH` (caminho do arquivo SQLite). Para acesso por outra máquina, configure `HOST=0.0.0.0` no ambiente de execução.
+
+### API v2.0
+
+| Método | Endpoint | Resultado |
+| --- | --- | --- |
+| GET | `/api/health` | Estado da aplicação e conexão com o banco |
+| GET | `/api/products` | `{ data: [...], total }` |
+| GET | `/api/products/:id` | `{ data: produto }` ou 404 |
+| GET | `/api/promotions` | `{ data: [...], total }` |
+
+A listagem aceita `q`, `tipo`, `categoria` e `ordem` (`padrao`, `nome-asc`, `nome-desc`, `preco-asc`, `preco-desc`). Exemplo: `/api/products?tipo=console&categoria=playstation&ordem=preco-asc`.
+
+Esta primeira etapa oferece consultas públicas. Ainda não há endpoints de escrita, autenticação, checkout ou pedidos. As páginas carregam o catálogo pela API e exibem uma mensagem com opção de tentar novamente quando o backend falha.
 
 ## 🧭 Roadmap
 
@@ -184,8 +216,8 @@ Basta abrir `index.html` no navegador ou utilizar uma extensão como **Live Serv
 
 ### v2.0 — Full Stack
 
-- [ ] API
-- [ ] Banco de dados
+- [x] API de consulta do catálogo
+- [x] Banco de dados SQLite
 - [ ] Cadastro e login
 - [ ] Autenticação
 - [ ] Gerenciamento de produtos
